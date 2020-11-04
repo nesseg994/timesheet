@@ -17,6 +17,9 @@ pipeline {
         }
         
         stage('Deploy') {
+        	when {
+        		expression { env.BRANCH_NAME == master }
+        	}
             steps {
                 bat "mvn package -X -f timesheet"
                 bat "mvn deploy -X -f timesheet"
@@ -29,6 +32,7 @@ pipeline {
 		success {
 			script {
 		    	if (env.BRANCH_NAME == 'dev_1' || ${env.BRANCH_NAME} == 'dev_1')
+		    		bat "git init" 
 		    		bat "git checkout master"
 		        	bat "git merge " + env.BRANCH_NAME
 		  	}
