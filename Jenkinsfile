@@ -28,8 +28,8 @@ pipeline {
     post {
 		success {
 			script {
-		    	if (${env.BRANCH_NAME} == 'dev_1' || ${env.BRANCH_NAME} == 'dev_1')
-		        	bat "git merge ${env.BRANCH_NAME} master"
+		    	if (env.BRANCH_NAME == 'dev_1' || ${env.BRANCH_NAME} == 'dev_1')
+		        	bat "git merge ' + env.BRANCH_NAME + ' master"
 		  	}
 		}
 		// failure block (send email)
