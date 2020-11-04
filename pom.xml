@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>tn.esprit.spring</groupId>
 	<artifactId>timesheet</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version> <!-- If 1.0 => will be deployed on Releases repo (nexus) -->
 	<name>timesheet</name>
 	<description>timesheet</description>
 
