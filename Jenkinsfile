@@ -14,6 +14,17 @@ pipeline {
             steps { 
                 bat "mvn test -X -f timesheet"
             }
+            
+            post {
+				success {
+					script {
+				    	if (env.BRANCH_NAME == 'dev_1' || env.BRANCH_NAME == 'dev_2') {
+				        	bat "git merge -X " + env.BRANCH_NAME + " master"
+				        }
+				  	}
+				}
+				// failure block (send email)
+			}
         }
         
         stage('Deploy') {
@@ -29,15 +40,4 @@ pipeline {
             }
         }
     }
-    
-    post {
-		success {
-			script {
-		    	if (env.BRANCH_NAME == 'dev_1' || ${env.BRANCH_NAME} == 'dev_1')
-		    		deleteDir()
-		        	bat "git fetch https://github.com/nesseg994/timesheet.git " + env.BRANCH_NAME + ":master"
-		  	}
-		}
-		// failure block (send email)
-	}
 }
