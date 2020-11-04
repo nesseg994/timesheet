@@ -30,7 +30,7 @@ pipeline {
 			script {
 		    	if (env.BRANCH_NAME == 'dev_1' || ${env.BRANCH_NAME} == 'dev_1')
 		    		bat "git checkout master"
-		        	bat "git merge ' + env.BRANCH_NAME
+		        	bat "git merge " + env.BRANCH_NAME
 		  	}
 		}
 		// failure block (send email)
