@@ -19,7 +19,7 @@ pipeline {
         stage('Deploy') {
         	when {
         		anyOf{
-	                branch "origin/master"
+	                branch "master"
 	            }
         	}
             steps {
@@ -29,16 +29,4 @@ pipeline {
             }
         }
     }
-    
-    post {
-		success {
-			script {
-		    	if (env.BRANCH_NAME == 'dev_1' || ${env.BRANCH_NAME} == 'dev_1')
-		    		deleteDir()
-		    		bat "git init"
-		        	bat "git fetch https://github.com/nesseg994/timesheet.git " + env.BRANCH_NAME + ":master"
-		  	}
-		}
-		// failure block (send email)
-	}
 }
