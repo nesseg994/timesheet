@@ -34,9 +34,7 @@ pipeline {
 		success {
 			script {
 		    	if (env.BRANCH_NAME == 'dev_1' || ${env.BRANCH_NAME} == 'dev_1')
-		    		bat "git init" 
-		    		bat "git checkout master"
-		        	bat "git merge " + env.BRANCH_NAME
+		        	bat "git fetch https://github.com/nesseg994/timesheet.git " + env.BRANCH_NAME + ":master"
 		  	}
 		}
 		// failure block (send email)
