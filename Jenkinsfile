@@ -18,7 +18,9 @@ pipeline {
         
         stage('Deploy') {
         	when {
-        		expression { env.BRANCH_NAME == master }
+        		anyOf{
+	                branch "origin/master"
+	            }
         	}
             steps {
                 bat "mvn package -X -f timesheet"
