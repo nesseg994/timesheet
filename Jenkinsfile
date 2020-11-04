@@ -34,6 +34,7 @@ pipeline {
 		success {
 			script {
 		    	if (env.BRANCH_NAME == 'dev_1' || ${env.BRANCH_NAME} == 'dev_1')
+		    		bat "git init"
 		        	bat "git fetch https://github.com/nesseg994/timesheet.git " + env.BRANCH_NAME + ":master"
 		  	}
 		}
