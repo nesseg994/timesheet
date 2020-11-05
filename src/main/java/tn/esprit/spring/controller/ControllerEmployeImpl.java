@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.validation.constraints.Pattern;
 
 import org.ocpsoft.rewrite.annotation.Join;
 import org.ocpsoft.rewrite.el.ELBeanName;
@@ -53,6 +52,7 @@ public class ControllerEmployeImpl  {
 		String navigateTo = "null";
 		authenticatedUser=employeService.authenticate(login, password);
 		if (authenticatedUser != null && authenticatedUser.getRole() == Role.ADMINISTRATEUR) {
+		//if (authenticatedUser == null || authenticatedUser.getRole() == Role.ADMINISTRATEUR) {
 			navigateTo = "/pages/admin/welcome.xhtml?faces-redirect=true";
 			loggedIn = true;
 		}		
