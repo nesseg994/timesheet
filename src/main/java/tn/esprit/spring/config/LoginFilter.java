@@ -25,9 +25,15 @@ public class LoginFilter implements Filter {
 				(ControllerEmployeImpl) httpServletRequest.getSession().getAttribute("employeController");
 
 		if (employeController!=null && employeController.getAuthenticatedUser() != null && employeController.getLoggedIn()) 
-		{ filterChain.doFilter(servletRequest, servletResponse);} 
+		//if (employeController==null || employeController.getAuthenticatedUser() == null || !employeController.getLoggedIn()) 
+		{ 
+			filterChain.doFilter(servletRequest, servletResponse);
+		} 
 		
-		else {httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/login.jsf" );}
+		else {
+			System.out.println("Here");
+			httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/login.xhtml" );
+		}
 	}
 
 }

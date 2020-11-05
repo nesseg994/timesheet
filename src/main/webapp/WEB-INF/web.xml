@@ -16,5 +16,11 @@
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
-
+    
+    <!-- 
+    <context-param>
+	    <param-name>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</param-name>
+	    <param-value>false</param-value>
+	</context-param>
+	 -->
 </web-app>
