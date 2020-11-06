@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    triggers { pollSCM('H * * * *') }
+    triggers { pollSCM('H 18 * * *') }
     stages {
         stage('Clone and Clean Main Repo'){
             steps {
