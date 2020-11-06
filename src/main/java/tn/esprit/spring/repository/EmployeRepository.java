@@ -18,11 +18,11 @@ public interface EmployeRepository extends CrudRepository<Employe, Integer>  {
 	@Query("SELECT e FROM Employe e WHERE e.email=:email and e.password=:password")
 	public Employe getEmployeByEmailAndPassword(@Param("email")String login, @Param("password")String password);
 	
-	
-	
-	
 	@Query("SELECT count(*) FROM Employe")
     public int countemp();
+	
+	@Query("SELECT count(*) FROM Employe e Where e.id = :id")
+    public int empExists(@Param("id") int id);
 	
     @Query("SELECT nom FROM Employe")
     public List<String> employeNames();
@@ -56,7 +56,16 @@ public interface EmployeRepository extends CrudRepository<Employe, Integer>  {
 			+ "where deps.id=:depId")
     public Double getSalaireMoyenByDepartementId(@Param("depId")int departementId);
 	
-    		
-   
+    @Modifying
+    @Transactional
+    @Query(value = "insert into employe (id, nom, prenom, email, actif, password, role) VALUES (:id, :nom, :prenom, :email, :actif, :pwd, :role)", nativeQuery = true)
+    public void insertEmployeJPQL(@Param("id") int id,
+    		@Param("nom") String nom,
+    		@Param("prenom") String prenom,
+    		@Param("email") String email,
+    		@Param("actif") boolean actif,
+    		@Param("pwd") String pwd,
+    		@Param("role") String role
+    		);
 
 }

@@ -11,6 +11,7 @@ import org.ocpsoft.rewrite.el.ELBeanName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.testng.log4testng.Logger;
 
 import tn.esprit.spring.entities.Contrat;
 import tn.esprit.spring.entities.Employe;
@@ -46,20 +47,25 @@ public class ControllerEmployeImpl  {
 
 	private Integer employeIdToBeUpdated; // getter et setter
 
+	private static final Logger l = Logger.getLogger(ControllerEmployeImpl.class);
+	static final String MESSAGE = "Must Be Logged In";
+	static final String REDIRECTIONPAGE = "/login.xhtml?faces-redirect=true";
 
 	public String doLogin() {
 
 		String navigateTo = "null";
 		authenticatedUser=employeService.authenticate(login, password);
 		if (authenticatedUser != null && authenticatedUser.getRole() == Role.ADMINISTRATEUR) {
-		//if (authenticatedUser == null || authenticatedUser.getRole() == Role.ADMINISTRATEUR) {
 			navigateTo = "/pages/admin/welcome.xhtml?faces-redirect=true";
 			loggedIn = true;
+			
+			l.info("Logged In");
 		}		
 
 		else
 		{
-			
+			l.error("Login Failed");
+			l.warn("Username/Password Wrong");
 			FacesMessage facesMessage =
 					new FacesMessage("Login Failed: Please check your username/password and try again.");
 			FacesContext.getCurrentInstance().addMessage("form:btn",facesMessage);
@@ -69,15 +75,22 @@ public class ControllerEmployeImpl  {
 
 	public String doLogout()
 	{
+		l.info("Logged Out");
+		
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	
-	return "/login.xhtml?faces-redirect=true";
+		return REDIRECTIONPAGE;
+		
 	}
 
 
 	public String addEmploye() {
-
-		if (authenticatedUser==null || !loggedIn) return "/login.xhtml?faces-redirect=true";
+		if (authenticatedUser==null || !loggedIn) {
+			l.warn(MESSAGE);
+			return REDIRECTIONPAGE;
+		}
+		
+		l.info("Adding New Employe...");
 
 		employeService.addOrUpdateEmploye(new Employe(nom, prenom, email, password, actif, role)); 
 		return "null"; 
@@ -85,7 +98,12 @@ public class ControllerEmployeImpl  {
 
 	public String removeEmploye(int employeId) {
 		String navigateTo = "null";
-		if (authenticatedUser==null || !loggedIn) return "/login.xhtml?faces-redirect=true";
+		if (authenticatedUser==null || !loggedIn) {
+			l.warn(MESSAGE);
+			return REDIRECTIONPAGE;
+		}
+		
+		l.info("Removing Employe...");
 
 		employeService.deleteEmployeById(employeId);
 		return navigateTo; 
@@ -94,9 +112,13 @@ public class ControllerEmployeImpl  {
 	public String displayEmploye(Employe empl) 
 	{
 		String navigateTo = "null";
-		if (authenticatedUser==null || !loggedIn) return "/login.xhtml?faces-redirect=true";
+		if (authenticatedUser==null || !loggedIn) {
+			l.warn(MESSAGE);
+			return REDIRECTIONPAGE;
+		}
 
-
+		l.info("Retrieving Employe...");
+		
 		this.setPrenom(empl.getPrenom());
 		this.setNom(empl.getNom());
 		this.setActif(empl.isActif()); 
@@ -113,8 +135,13 @@ public class ControllerEmployeImpl  {
 	{ 
 		String navigateTo = "null";
 		
-		if (authenticatedUser==null || !loggedIn) return "/login.xhtml?faces-redirect=true";
+		if (authenticatedUser==null || !loggedIn) {
+			l.warn(MESSAGE);
+			return REDIRECTIONPAGE;
+		}
 
+		l.info("Updating Employe...");
+		
 		employeService.addOrUpdateEmploye(new Employe(employeIdToBeUpdated, nom, prenom, email, password, actif, role)); 
 
 		return navigateTo; 

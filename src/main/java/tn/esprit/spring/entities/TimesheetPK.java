@@ -70,7 +70,7 @@ public class TimesheetPK implements Serializable {
 				return false;
 		} else if (!dateFin.equals(other.dateFin))
 			return false;
-		if (idEmploye != other.idEmploye)
+		if (idEmploye != other.idEmploye || idMission != other.idMission)
 			return false;
 		if (idMission != other.idMission)
 			return false;
