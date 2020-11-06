@@ -10,7 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.testng.log4testng.Logger;
+import org.apache.log4j.Logger;
 
 import tn.esprit.spring.controller.ControllerEmployeImpl;
 
