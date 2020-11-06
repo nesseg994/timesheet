@@ -50,7 +50,7 @@ public class EmployeTest {
 		l.info("a");  // for the order of execution
 		service.addOrUpdateEmployeJPQL(empId, "nesrine", "ness", "nesrine.eg94@gmail.com", true, "pwd", Role.INGENIEUR.name());
 		
-		l.info("Service Add " + empId);
+		l.info("Service Add + " + empId);
 		
         assertThat(empId).isGreaterThan(0);
 	}
