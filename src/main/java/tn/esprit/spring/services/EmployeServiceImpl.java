@@ -41,123 +41,169 @@ public class EmployeServiceImpl implements IEmployeService {
 		employeRepository.save(employe);
 		return employe.getId();
 	}
-
-
-	public void mettreAjourEmailByEmployeId(String email, int employeId) {
-		Employe employe = employeRepository.findById(employeId).get();
-		employe.setEmail(email);
-		employeRepository.save(employe);
-
+	
+	@Override
+	public void addOrUpdateEmployeJPQL(int id, String nom, String prenom, String email, boolean actif, String pwd, String role) {
+		employeRepository.insertEmployeJPQL(id, nom, prenom, email, actif, pwd, role);
 	}
 
-	@Transactional	
-	public void affecterEmployeADepartement(int employeId, int depId) {
-		Departement depManagedEntity = deptRepoistory.findById(depId).get();
-		Employe employeManagedEntity = employeRepository.findById(employeId).get();
-
-		if(depManagedEntity.getEmployes() == null){
-
-			List<Employe> employes = new ArrayList<>();
-			employes.add(employeManagedEntity);
-			depManagedEntity.setEmployes(employes);
-		}else{
-
-			depManagedEntity.getEmployes().add(employeManagedEntity);
+	@Override
+	public void mettreAjourEmailByEmployeId(String email, int employeId) {
+		Employe employe = employeRepository.findById(employeId).orElse(null);
+		
+		if(employe != null) {
+			employe.setEmail(email);
+			employeRepository.save(employe);
 		}
 
-		// à ajouter? 
-		deptRepoistory.save(depManagedEntity); 
+	}
+
+	@Override
+	@Transactional	
+	public void affecterEmployeADepartement(int employeId, int depId) {
+		Departement depManagedEntity = deptRepoistory.findById(depId).orElse(null);
+		Employe employeManagedEntity = employeRepository.findById(employeId).orElse(null);
+
+		if(depManagedEntity != null) {
+			if(depManagedEntity.getEmployes() == null){
+
+				List<Employe> employes = new ArrayList<>();
+				employes.add(employeManagedEntity);
+				depManagedEntity.setEmployes(employes);
+			} else{
+
+				depManagedEntity.getEmployes().add(employeManagedEntity);
+			}
+
+			// à ajouter? 
+			deptRepoistory.save(depManagedEntity); 
+		}
 
 	}
+	@Override
 	@Transactional
 	public void desaffecterEmployeDuDepartement(int employeId, int depId)
 	{
-		Departement dep = deptRepoistory.findById(depId).get();
+		Departement dep = deptRepoistory.findById(depId).orElse(null);
 
-		int employeNb = dep.getEmployes().size();
-		for(int index = 0; index < employeNb; index++){
-			if(dep.getEmployes().get(index).getId() == employeId){
-				dep.getEmployes().remove(index);
-				break;//a revoir
+		if(dep != null) {
+			int employeNb = dep.getEmployes().size();
+			for(int index = 0; index < employeNb; index++){
+				if(dep.getEmployes().get(index).getId() == employeId){
+					dep.getEmployes().remove(index);
+					break; //a revoir
+				}
 			}
 		}
 	} 
 	
 	// Tablesapce (espace disque) 
 
+	@Override
 	public int ajouterContrat(Contrat contrat) {
 		contratRepoistory.save(contrat);
 		return contrat.getReference();
 	}
 
+	@Override
 	public void affecterContratAEmploye(int contratId, int employeId) {
-		Contrat contratManagedEntity = contratRepoistory.findById(contratId).get();
-		Employe employeManagedEntity = employeRepository.findById(employeId).get();
+		Contrat contratManagedEntity = contratRepoistory.findById(contratId).orElse(null);
+		Employe employeManagedEntity = employeRepository.findById(employeId).orElse(null);
 
-		contratManagedEntity.setEmploye(employeManagedEntity);
-		contratRepoistory.save(contratManagedEntity);
-
+		if (contratManagedEntity != null) {
+			contratManagedEntity.setEmploye(employeManagedEntity);
+			contratRepoistory.save(contratManagedEntity);
+		}
 	}
 
+	@Override
 	public String getEmployePrenomById(int employeId) {
-		Employe employeManagedEntity = employeRepository.findById(employeId).get();
-		return employeManagedEntity.getPrenom();
+		Employe employeManagedEntity = employeRepository.findById(employeId).orElse(null);
+		if (employeManagedEntity != null) 
+			return employeManagedEntity.getPrenom();
+		else
+			return null;
+	}
+	
+	@Override
+	public Employe getEmployeById(int employeId) {
+		return employeRepository.findById(employeId).orElse(null); // get() can throw exception if employe is not found
+	}
+	
+	@Override
+	public int verifyEmployeExistsById(int employeId) {
+		return employeRepository.empExists(employeId);
 	}
 	 
+	@Override
 	public void deleteEmployeById(int employeId)
 	{
-		Employe employe = employeRepository.findById(employeId).get();
-
+		Employe employe = employeRepository.findById(employeId).orElse(null);
+		
 		//Desaffecter l'employe de tous les departements
 		//c'est le bout master qui permet de mettre a jour
 		//la table d'association
-		for(Departement dep : employe.getDepartements()){
-			dep.getEmployes().remove(employe);
+		if(employe != null) {
+			for(Departement dep : employe.getDepartements()){
+				dep.getEmployes().remove(employe);
+			}
+			employeRepository.delete(employe);
 		}
 
-		employeRepository.delete(employe);
 	}
 
+	@Override
 	public void deleteContratById(int contratId) {
-		Contrat contratManagedEntity = contratRepoistory.findById(contratId).get();
-		contratRepoistory.delete(contratManagedEntity);
+		Contrat contratManagedEntity = contratRepoistory.findById(contratId).orElse(null);
+		if (contratManagedEntity != null) {
+			contratRepoistory.delete(contratManagedEntity);
+		}
 
 	}
 
+	@Override
 	public int getNombreEmployeJPQL() {
 		return employeRepository.countemp();
 	}
 
+	@Override
 	public List<String> getAllEmployeNamesJPQL() {
 		return employeRepository.employeNames();
 
 	}
 
+	@Override
 	public List<Employe> getAllEmployeByEntreprise(Entreprise entreprise) {
 		return employeRepository.getAllEmployeByEntreprisec(entreprise);
 	}
 
+	@Override
 	public void mettreAjourEmailByEmployeIdJPQL(String email, int employeId) {
 		employeRepository.mettreAjourEmailByEmployeIdJPQL(email, employeId);
 
 	}
+	@Override
 	public void deleteAllContratJPQL() {
 		employeRepository.deleteAllContratJPQL();
 	}
 
+	@Override
 	public float getSalaireByEmployeIdJPQL(int employeId) {
 		return employeRepository.getSalaireByEmployeIdJPQL(employeId);
 	}
 
+	@Override
 	public Double getSalaireMoyenByDepartementId(int departementId) {
 		return employeRepository.getSalaireMoyenByDepartementId(departementId);
 	}
 
+	@Override
 	public List<Timesheet> getTimesheetsByMissionAndDate(Employe employe, Mission mission, Date dateDebut,
 			Date dateFin) {
 		return timesheetRepository.getTimesheetsByMissionAndDate(employe, mission, dateDebut, dateFin);
 	}
 
+	@Override
 	public List<Employe> getAllEmployes() {
 		return (List<Employe>) employeRepository.findAll();
 	}

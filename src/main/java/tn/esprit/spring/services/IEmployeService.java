@@ -21,6 +21,7 @@ public interface IEmployeService {
 	public int ajouterContrat(Contrat contrat);
 	public void affecterContratAEmploye(int contratId, int employeId);
 	public String getEmployePrenomById(int employeId);
+	public Employe getEmployeById(int employeId);
 	public void deleteEmployeById(int employeId);
 	public void deleteContratById(int contratId);
 	public int getNombreEmployeJPQL();
@@ -35,8 +36,8 @@ public interface IEmployeService {
 	Date dateDebut, Date dateFin);
 
 	int addOrUpdateEmploye(Employe employe);
-	
-	
+	public void addOrUpdateEmployeJPQL(int id, String nom, String prenom, String email, boolean actif, String pwd, String role);
+	public int verifyEmployeExistsById(int employeId);
 	
 
 	
